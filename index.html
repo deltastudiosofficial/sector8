@@ -287,10 +287,7 @@
             flex-wrap: nowrap;
             justify-content: center;
             gap: 25px;
-            overflow-x: auto;
-            scrollbar-width: none; /* Oculta scrollbar en Firefox */
         }
-        #main-nav ul::-webkit-scrollbar { display: none; } /* Oculta scrollbar en Chrome/Safari */
 
         #main-nav a {
             color: var(--primary);
@@ -406,8 +403,12 @@
 
         /* Media Queries para Responsividad */
         @media (max-width: 768px) {
-            #main-nav ul { gap: 15px; justify-content: flex-start; }
-            #main-nav a { font-size: 1.6rem; }
+            #main-nav ul { 
+                gap: 5px; 
+                justify-content: space-around; 
+                padding: 5px 0;
+            }
+            #main-nav a { font-size: 1.1rem; flex-direction: column; gap: 2px; text-align: center; }
             #content-container { padding: 0 15px; }
             h1 { font-size: 4rem; }
             p { font-size: 1.2rem; line-height: 1.1 !important; letter-spacing: -0.02em; }
@@ -476,86 +477,11 @@
             90% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
             100% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.9); }
         }
-
-        /* Árboles atmosféricos laterales */
-        .trees-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 85vh;
-            display: none; /* Oculto al inicio */
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .tree-item {
-            position: absolute;
-            bottom: -20px;
-            width: 450px;
-            height: 100%;
-            opacity: 0.1; /* Más transparentes por defecto */
-            filter: blur(1.5px) drop-shadow(0 0 5px var(--primary));
-            transform-origin: bottom center;
-            animation: treeWind 10s ease-in-out infinite alternate;
-        }
-
-        .tree-item-right {
-            animation-name: treeWindRight;
-        }
-
-        @keyframes treeWind {
-            0% { transform: rotate(-2.5deg) skewX(-1.5deg); }
-            100% { transform: rotate(3deg) skewX(2deg); }
-        }
-
-        @keyframes treeWindRight {
-            0% { transform: scaleX(-1) rotate(-2.5deg) skewX(-1.5deg); }
-            100% { transform: scaleX(-1) rotate(3deg) skewX(2deg); }
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="trees-container">
-            <!-- Árboles Izquierda -->
-            <svg class="tree-item" style="left: -10%; animation-delay: -2s;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 Q45,150 50,100 T50,20 M50,160 L20,140 M50,160 L80,145 M50,130 L10,100 M50,130 L90,110 M50,90 L25,60 M50,90 L75,70 M50,60 L35,30 M50,60 L65,40" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item" style="left: 2%; animation-delay: -5s; width: 380px; opacity: 0.1;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 C40,140 60,100 50,30 M50,150 L15,120 M50,140 L85,110 M50,110 L20,80 M50,100 L80,70 M50,70 L30,40" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item" style="left: 12%; animation-delay: -8s; width: 420px; opacity: 0.12;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 Q55,140 50,80 T50,10 M50,170 L25,155 M50,150 L75,130 M50,120 L15,90 M50,110 L85,85 M50,80 L30,50" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item" style="left: -5%; animation-delay: -1s; width: 500px; opacity: 0.08;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 L50,120 M50,120 L10,80 M50,120 L90,80 M50,150 L20,130 M50,150 L80,130 M50,90 L30,50 M50,90 L70,50" 
-                      stroke="var(--primary)" stroke-width="1" fill="none" stroke-linecap="round"/>
-            </svg>
-
-            <!-- Árboles Derecha -->
-            <svg class="tree-item tree-item-right" style="right: -10%; animation-delay: -3s;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 Q45,150 50,100 T50,20 M50,160 L20,140 M50,160 L80,145 M50,130 L10,100 M50,130 L90,110 M50,90 L25,60 M50,90 L75,70 M50,60 L35,30 M50,60 L65,40" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item tree-item-right" style="right: 2%; animation-delay: -6s; width: 380px; opacity: 0.1;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 C40,140 60,100 50,30 M50,150 L15,120 M50,140 L85,110 M50,110 L20,80 M50,100 L80,70 M50,70 L30,40" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item tree-item-right" style="right: 12%; animation-delay: -9s; width: 420px; opacity: 0.12;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 Q55,140 50,80 T50,10 M50,170 L25,155 M50,150 L75,130 M50,120 L15,90 M50,110 L85,85 M50,80 L30,50" 
-                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            </svg>
-            <svg class="tree-item tree-item-right" style="right: -5%; animation-delay: -4s; width: 500px; opacity: 0.08;" viewBox="0 0 100 200" preserveAspectRatio="none">
-                <path d="M50,200 L50,120 M50,120 L10,80 M50,120 L90,80 M50,150 L20,130 M50,150 L80,130 M50,90 L30,50 M50,90 L70,50" 
-                      stroke="var(--primary)" stroke-width="1" fill="none" stroke-linecap="round"/>
-            </svg>
-        </div>
         <div class="scanlines"></div>
         <div class="grid-pattern"></div>
         <div class="scanline-move"></div>
@@ -627,9 +553,6 @@
             document.getElementById('section-view').style.display = 'block';
             
             document.querySelector('.container').style.justifyContent = 'flex-start';
-
-            // Mostrar los árboles ambientales
-            document.querySelector('.trees-container').style.display = 'block';
 
             // Crear y mostrar el globo de bienvenida
             const bubble = document.createElement('div');
