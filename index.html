@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delta Studios</title>
+    <!-- Importación de tipografías desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@700&family=VT323&display=swap" rel="stylesheet">
+    <!-- Importación de Iconos (Material Symbols) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --primary: #FF8C00;
+            --primary-glow: rgba(255, 140, 0, 0.4);
+            --bg-dark: #000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background: var(--primary);
+            color: #000;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            height: 100vh;
+            width: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fondo.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efectos de Ambiente Mejorados */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255, 140, 0, 0.2) 0%, rgba(139, 69, 19, 0.05) 50%, transparent 80%);
+            animation: pulseGlow 5s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Capa de Ruido/Grano */
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noisy_Texture.png");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        /* Efecto de Scanlines (CRT) */
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.3) 51%
+            );
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        /* Rejilla Digital de Fondo */
+        .grid-pattern {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 140, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 140, 0, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Línea de escaneo móvil */
+        .scanline-move {
+            width: 100%;
+            height: 100px;
+            z-index: 7;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,140,0,0.05) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            pointer-events: none;
+            animation: scanlineAnim 8s linear infinite;
+        }
+
+        /* Efecto de Vignette */
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 0.4; transform: scale(1); }
+        }
+
+        @keyframes scanlineAnim {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        /* Estilo para los iconos flotantes de fondo */
+        .bg-icon {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.05;
+            font-size: 5rem;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+            filter: blur(1px);
+            animation: floatAmbient linear infinite alternate;
+        }
+
+        @keyframes floatAmbient {
+            from { transform: translate(0, 0) rotate(0deg); opacity: 0.02; }
+            to { transform: translate(30px, 40px) rotate(15deg); opacity: 0.06; }
+        }
+
+        h1 {
+            font-family: 'Permanent Marker', cursive;
+            color: var(--primary);
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75);
+            animation: glitch 500ms infinite;
+        }
+
+        p {
+            font-family: 'Caveat', cursive;
+            color: var(--primary);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .btn-enter {
+            padding: 15px 40px;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border-radius: 5px;
+            outline: none;
+            animation: textFlicker 3s infinite, borderFlicker 3s infinite, float 4s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Botones de acción (Sinopsis y Creador) */
+        .btn-action {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-family: 'VT323', monospace;
+            font-size: 1.6rem;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-action:hover {
+            background-color: rgba(255, 140, 0, 0.2);
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-3px);
+        }
+
+        .btn-creator {
+            font-family: 'Caveat', cursive !important;
+            background-color: var(--primary) !important;
+            color: #000 !important;
+            border: none !important;
+            margin-top: 10px;
+            font-size: 1.8rem;
+        }
+
+        .btn-enter:hover {
+            background-color: var(--primary);
+            color: #000;
+            box-shadow: 0 0 30px var(--primary);
+            animation: none; /* Detiene las animaciones al pasar el mouse para mayor claridad */
+        }
+
+        /* Animación de parpadeo de texto (Neon) */
+        @keyframes textFlicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 5px var(--primary), 0 0 15px var(--primary-glow);
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+
+        /* Animación de parpadeo de borde y sombra del botón */
+        @keyframes borderFlicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                box-shadow: 0 0 5px var(--primary), inset 0 0 5px var(--primary);
+                border-color: var(--primary);
+            }
+            20%, 24%, 55% {
+                box-shadow: none;
+                border-color: rgba(255, 140, 0, 0.2);
+            }
+        }
+
+        /* Glitch Cromático */
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), -0.025em 0.05em 0 rgba(0,0,255,0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), -0.025em 0.05em 0 rgba(0,0,255,0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75), -0.025em -0.05em 0 rgba(0,0,255,0.75); }
+        }
+
+        /* Animación de movimiento arriba/abajo (Flotado) */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Estilos para la Navegación Superior */
+        #main-nav {
+            width: 100%;
+            padding: 15px 20px;
+            z-index: 10;
+            display: none; /* Oculto inicialmente */
+            background-color: rgba(0, 0, 0, 0.6);
+            border-bottom: 1px solid var(--primary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #main-nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        #main-nav a {
+            color: var(--primary);
+            font-family: 'VT323', monospace;
+            text-decoration: none;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #main-nav a:hover {
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        .leaf {
+            position: absolute;
+            top: -20px;
+            background-color: var(--primary);
+            border-radius: 0 80%; /* Forma de hoja */
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+            filter: blur(0.5px);
+            animation: fallLeaf linear infinite;
+        }
+
+        @keyframes fallLeaf {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% { opacity: 0.5; }
+            85% { opacity: 0.5; }
+            100% {
+                transform: translateY(110vh) translateX(120px) rotate(540deg);
+                opacity: 0;
+            }
+        }
+
+        /* Área de Contenido con Scroller */
+        #section-view {
+            width: 100%;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: none;
+            padding: 40px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) rgba(0,0,0,0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        #section-view::-webkit-scrollbar {
+            width: 8px;
+        }
+        #section-view::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+        }
+        #section-view::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pie de Página */
+        footer {
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--primary);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .footer-copy {
+            font-family: sans-serif;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .footer-contact {
+            font-family: 'Caveat', cursive;
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .tiktok-link {
+            font-family: 'VT323', monospace;
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            transition: 0.3s ease;
+        }
+
+        .tiktok-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            #main-nav ul { gap: 15px; }
+            #main-nav a { font-size: 1.4rem; }
+            #content-container { padding: 0 15px; }
+            h1 { font-size: 4rem; }
+            p { font-size: 1.2rem; }
+            .btn-action { max-width: 100%; }
+        }
+
+        @media (min-width: 1200px) {
+            p {
+                line-height: 2.2 !important;
+            }
+        }
+
+        /* Estilos para las imágenes de colaboradores con efecto hover */
+        .collab-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .collab-avatar:hover {
+            transform: translateX(10px);
+            box-shadow: 0 0 35px var(--primary);
+        }
+
+        /* Globo de texto de bienvenida */
+        .welcome-bubble {
+            position: absolute;
+            top: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            z-index: 1000;
+            box-shadow: 0 0 30px var(--primary);
+            text-align: center;
+            pointer-events: none;
+            animation: bubbleLife 4.5s ease-in-out forwards;
+        }
+
+        /* Triángulo del globo de texto */
+        .welcome-bubble::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 15px 15px;
+            border-style: solid;
+            border-color: transparent transparent var(--primary);
+        }
+
+        @keyframes bubbleLife {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.9); }
+            10% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            90% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.9); }
+        }
+
+        /* Árboles atmosféricos laterales */
+        .trees-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 85vh;
+            display: none; /* Oculto al inicio */
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .tree-item {
+            position: absolute;
+            bottom: -20px;
+            width: 450px;
+            height: 100%;
+            opacity: 0.18; /* Aún más transparentes para que se vean muy al fondo */
+            filter: blur(1.5px) drop-shadow(0 0 5px var(--primary));
+            transform-origin: bottom center;
+            animation: treeWind 10s ease-in-out infinite alternate;
+        }
+
+        .tree-item-right {
+            animation-name: treeWindRight;
+        }
+
+        @keyframes treeWind {
+            0% { transform: rotate(-2.5deg) skewX(-1.5deg); }
+            100% { transform: rotate(3deg) skewX(2deg); }
+        }
+
+        @keyframes treeWindRight {
+            0% { transform: scaleX(-1) rotate(-2.5deg) skewX(-1.5deg); }
+            100% { transform: scaleX(-1) rotate(3deg) skewX(2deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="trees-container">
+            <!-- Árboles Izquierda -->
+            <svg class="tree-item" style="left: -10%; animation-delay: -2s;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 Q45,150 50,100 T50,20 M50,160 L20,140 M50,160 L80,145 M50,130 L10,100 M50,130 L90,110 M50,90 L25,60 M50,90 L75,70 M50,60 L35,30 M50,60 L65,40" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item" style="left: 2%; animation-delay: -5s; width: 380px; opacity: 0.1;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 C40,140 60,100 50,30 M50,150 L15,120 M50,140 L85,110 M50,110 L20,80 M50,100 L80,70 M50,70 L30,40" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item" style="left: 12%; animation-delay: -8s; width: 420px; opacity: 0.12;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 Q55,140 50,80 T50,10 M50,170 L25,155 M50,150 L75,130 M50,120 L15,90 M50,110 L85,85 M50,80 L30,50" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item" style="left: -5%; animation-delay: -1s; width: 500px; opacity: 0.08;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 L50,120 M50,120 L10,80 M50,120 L90,80 M50,150 L20,130 M50,150 L80,130 M50,90 L30,50 M50,90 L70,50" 
+                      stroke="var(--primary)" stroke-width="1" fill="none" stroke-linecap="round"/>
+            </svg>
+
+            <!-- Árboles Derecha -->
+            <svg class="tree-item tree-item-right" style="right: -10%; animation-delay: -3s;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 Q45,150 50,100 T50,20 M50,160 L20,140 M50,160 L80,145 M50,130 L10,100 M50,130 L90,110 M50,90 L25,60 M50,90 L75,70 M50,60 L35,30 M50,60 L65,40" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item tree-item-right" style="right: 2%; animation-delay: -6s; width: 380px; opacity: 0.1;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 C40,140 60,100 50,30 M50,150 L15,120 M50,140 L85,110 M50,110 L20,80 M50,100 L80,70 M50,70 L30,40" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item tree-item-right" style="right: 12%; animation-delay: -9s; width: 420px; opacity: 0.12;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 Q55,140 50,80 T50,10 M50,170 L25,155 M50,150 L75,130 M50,120 L15,90 M50,110 L85,85 M50,80 L30,50" 
+                      stroke="var(--primary)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            <svg class="tree-item tree-item-right" style="right: -5%; animation-delay: -4s; width: 500px; opacity: 0.08;" viewBox="0 0 100 200" preserveAspectRatio="none">
+                <path d="M50,200 L50,120 M50,120 L10,80 M50,120 L90,80 M50,150 L20,130 M50,150 L80,130 M50,90 L30,50 M50,90 L70,50" 
+                      stroke="var(--primary)" stroke-width="1" fill="none" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="scanlines"></div>
+        <div class="grid-pattern"></div>
+        <div class="scanline-move"></div>
+        <div class="vignette"></div>
+        <!-- Pantalla Inicial -->
+        <div id="landing-content" style="text-align: center; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+            <h1>DELTA STUDIOS</h1>
+            <p style="text-align: center; font-size: clamp(2.5rem, 8vw, 4.5rem); margin-top: -10px; margin-bottom: 25px;">inestable sector 8</p>
+            <button class="btn-enter">Entrar</button>
+        </div>
+
+        <!-- Pantalla de Secciones (Aparece tras el clic) -->
+        <nav id="main-nav">
+            <ul>
+                <li><a href="#" id="nav-home"><span class="material-symbols-outlined">home</span>Principal</a></li>
+                <li><a href="#" id="nav-animacion"><span class="material-symbols-outlined">edit</span>Animación</a></li>
+                <li><a href="#" id="nav-doblaje"><span class="material-symbols-outlined">mic</span>Doblaje</a></li>
+                <li><a href="#" id="nav-colaboradores"><span class="material-symbols-outlined">person</span>Colaboradores / Artistas</a></li>
+            </ul>
+        </nav>
+
+        <!-- Vista de Sección con Scroller -->
+        <main id="section-view">
+            <div id="content-container" style="max-width: 800px; margin: 0 auto; color: #fff; font-family: 'VT323', monospace; font-size: 1.4rem; text-align: center;">
+                <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">PRINCIPAL</p>
+                <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.8; font-size: 1.8rem; margin-bottom: 40px; text-align: justify;">
+                    ¡BIENVENIDO A DELTA STUDIOS! Pisas un suelo hecho de nostalgia y promesas, un santuario donde el misterio no busca ser resuelto, sino contemplado; donde los secretos se esculpen a mano y cada sombra es un personaje que observa en silencio, esperando que tu mirada le devuelva la luz. Bienvenido a mi mundo. Déjate llevar por la magia de la animación independiente y prepárate para lo que está por venir.
+                </p>
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; width: 100%;">
+                    <img src="poster.jpeg" alt="Inestable Sector 8 Poster" style="border: 4px solid #FF8C00; max-width: 480px; width: 100%; display: block; box-shadow: 0 0 30px rgba(255, 140, 0, 0.2);">
+                    <div style="background-color: #000; border: 4px solid #FF8C00; border-top: none; width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; text-align: center;">
+                        <h2 style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 2.5rem; margin: 0; text-transform: uppercase;">inestable sector 8</h2>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.2rem; margin: 10px 0 0 0; line-height: 1.2; text-align: center;">Capítulo 1 en fase de producción, próximamente</p>
+                    </div>
+                    <button class="btn-action">SINOPSIS</button>
+                    <button class="btn-action btn-creator">Sobre el creador</button>
+                </div>
+                <div style="background-color: rgba(255, 140, 0, 0.1); border: 2px solid #FF8C00; padding: 40px; margin-top: 20px; border-radius: 15px; width: 100%; box-sizing: border-box;">
+                    <h3 style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.2rem; margin-bottom: 15px;">ANUNCIOS</h3>
+                    <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.6rem; margin: 0; text-align: center;">sin anuncios disponibles</p>
+                </div>
+                <div style="height: 40px;"></div>
+            </div>
+
+            <!-- Pie de página dentro del área de scroll -->
+            <footer id="main-footer">
+                <p class="footer-copy">© 2026 DELTA STUDIOS todos los derechos reservados.</p>
+                <p class="footer-contact">contactanos en nuestras redes oficiales</p>
+                <a href="https://www.tiktok.com/@ink_delta" target="_blank" class="tiktok-link" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47-.13 1.96-.12 3.92-.12 5.88 0 2.45-.81 4.97-2.73 6.48-1.72 1.43-4.13 2.05-6.3 1.76-2.52-.24-4.9-1.9-5.74-4.33-.94-2.58-.33-5.69 1.6-7.58 1.45-1.51 3.65-2.26 5.75-2.13v4.1c-1.14-.14-2.35.15-3.23.91-.97.77-1.32 2.1-1.02 3.3.26 1.29 1.41 2.37 2.72 2.44 1.34.1 2.76-.73 3.19-2.01.2-.5.23-1.03.23-1.56V.02z"/>
+                    </svg>
+                </a>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Lógica para cambiar de pantalla
+        document.querySelector('.btn-enter').addEventListener('click', function() {
+            // Ocultamos el contenido inicial
+            document.getElementById('landing-content').style.display = 'none';
+            
+            // Mostramos el menú y ajustamos el contenedor para que suba a la parte superior
+            const nav = document.getElementById('main-nav');
+            nav.style.display = 'block';
+            
+            // Mostramos el contenido de la sección (el footer está dentro)
+            document.getElementById('section-view').style.display = 'block';
+            
+            document.querySelector('.container').style.justifyContent = 'flex-start';
+
+            // Mostrar los árboles ambientales
+            document.querySelector('.trees-container').style.display = 'block';
+
+            // Crear y mostrar el globo de bienvenida
+            const bubble = document.createElement('div');
+            bubble.className = 'welcome-bubble';
+            bubble.innerText = '!BIENVENIDO A MI MUNDO! DELTA STUDIOS agradece tu apoyo';
+            document.querySelector('.container').appendChild(bubble);
+            
+            // Eliminar el globo después de 4.5 segundos
+            setTimeout(() => bubble.remove(), 4500);
+        });
+
+        // Lógica de navegación entre secciones
+        const contentContainer = document.getElementById('content-container');
+        const sectionView = document.getElementById('section-view');
+
+        document.getElementById('nav-animacion').addEventListener('click', function(e) {
+            e.preventDefault();
+            contentContainer.innerHTML = `
+                <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">ANIMACIÓN</p>
+                <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.8; font-size: 1.8rem; margin-bottom: 40px; text-align: justify;">Deja que tus ojos descubran el arte de dar alma a las sombras, el trazo desafía a la realidad y la imaginación se vuelve movimiento.</p>
+                <div style="background-color: rgba(255, 140, 0, 0.1); border: 2px solid #FF8C00; padding: 20px; margin-top: 20px; border-radius: 15px; width: 100%; box-sizing: border-box; text-align: center;">
+                    <p style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 1.8rem; margin: 0; text-align: center;">Aún no hay animaciones disponibles.</p>
+                </div>
+                <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.6rem; margin-top: 20px; text-align: center;">Nuestro equipo trabaja día a día para traer a la pantalla una historia de calidad.</p>
+                <div style="height: 40px;"></div>
+            `;
+            sectionView.scrollTop = 0; // Vuelve arriba al cambiar de sección
+        });
+
+        document.getElementById('nav-doblaje').addEventListener('click', function(e) {
+            e.preventDefault();
+            contentContainer.innerHTML = `
+                <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 30px;">DOBLAJE</p>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%;">
+                    <button class="btn-action" style="background-color: var(--primary); color: #000; border: none; max-width: 500px; margin-top: 0; font-weight: bold; font-size: 2.2rem; padding: 25px;">CAST OFICIAL</button>
+                    <button class="btn-action" style="background-color: var(--primary); color: #000; border: none; max-width: 500px; margin-top: 0; font-weight: bold; font-size: 2.2rem; padding: 25px;">EQUIPAMIENTO TÉCNICO</button>
+                </div>
+                <div style="height: 40px;"></div>
+            `;
+            sectionView.scrollTop = 0;
+        });
+
+        document.getElementById('nav-colaboradores').addEventListener('click', function(e) {
+            e.preventDefault();
+            contentContainer.innerHTML = `
+                <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 30px;">COLABORADORES / ARTISTAS</p>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 50px; width: 100%;">
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="reika.jpeg" alt="REIKA" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase;">REIKA</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">escritor que los hara llorar</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="jaruno.jpeg" alt="JARUNO ARCOS DE LUNA" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">JARUNO ARCOS DE LUNA</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">animador</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="mushy.jpeg" alt="XMUSHY" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">XMUSHY</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">animadora</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="bruno.jpeg" alt="BRUNO(BRUNNOX)" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">BRUNO(BRUNNOX)</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">animador</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="waffles.jpeg" alt="MR.WAFFLES" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">MR.WAFFLES</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">i like panqueques</p>
+                    </div>
+                </div>
+                <div style="height: 40px;"></div>
+            `;
+            sectionView.scrollTop = 0;
+        });
+
+        document.getElementById('nav-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            contentContainer.innerHTML = `
+                <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">PRINCIPAL</p>
+                <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.8; font-size: 1.8rem; margin-bottom: 40px; text-align: justify;">
+                    ¡BIENVENIDO A DELTA STUDIOS! Pisas un suelo hecho de nostalgia y promesas, un santuario donde el misterio no busca ser resuelto, sino contemplado; donde los secretos se esculpen a mano y cada sombra es un personaje que observa en silencio, esperando que tu mirada le devuelva la luz. Bienvenido a mi mundo. Déjate llevar por la magia de la animación independiente y prepárate para lo que está por venir.
+                </p>
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; width: 100%;">
+                    <img src="poster.jpeg" alt="Inestable Sector 8 Poster" style="border: 4px solid #FF8C00; max-width: 480px; width: 100%; display: block; box-shadow: 0 0 30px rgba(255, 140, 0, 0.2);">
+                    <div style="background-color: #000; border: 4px solid #FF8C00; border-top: none; width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; text-align: center;">
+                        <h2 style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 2.5rem; margin: 0; text-transform: uppercase;">inestable sector 8</h2>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.2rem; margin: 10px 0 0 0; line-height: 1.2; text-align: center;">Capítulo 1 en fase de producción, próximamente</p>
+                    </div>
+                    <button class="btn-action">SINOPSIS</button>
+                    <button class="btn-action btn-creator">Sobre el creador</button>
+                </div>
+                <div style="background-color: rgba(255, 140, 0, 0.1); border: 2px solid #FF8C00; padding: 40px; margin-top: 20px; border-radius: 15px; width: 100%; box-sizing: border-box;">
+                    <h3 style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.2rem; margin-bottom: 15px;">ANUNCIOS</h3>
+                    <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.6rem; margin: 0; text-align: center;">sin anuncios disponibles</p>
+                </div>
+                <div style="height: 40px;"></div>
+            `;
+            sectionView.scrollTop = 0;
+        });
+
+        // Lógica para botones de acción (Sinopsis y Creador)
+        contentContainer.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('btn-action') && e.target.textContent === 'SINOPSIS') {
+                contentContainer.innerHTML = `
+                    <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">SINOPSIS</p>
+                    <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.8; font-size: 1.8rem; margin-bottom: 40px; text-align: justify;">
+                        En una ciudad donde todo es color, hay un lugar que alguna vez lo fue, un parque abandonado en donde nuestro protagonista Arlo se aventura en una trama llena de adrenalina y misterio. Junto a su perro Reika, descubrirá los secretos más terroríficos de ese lugar, experimentos fallidos...
+                    </p>
+                    <button class="btn-action" onclick="document.getElementById('nav-home').click()" style="max-width: 220px;">VOLVER</button>
+                    <div style="height: 40px;"></div>
+                `;
+                sectionView.scrollTop = 0;
+            } else if (e.target && e.target.classList.contains('btn-action') && e.target.textContent === 'Sobre el creador') {
+                contentContainer.innerHTML = `
+                    <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">SOBRE EL CREADOR</p>
+                    <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.6; font-size: 1.6rem; margin-bottom: 40px; text-align: justify;">
+                        ¡Hola! Soy Diego González, el creador y director de DELTA STUDIOS, un estudio mexicano de animación independiente nacido de la necesidad de contar historias que desafíen lo común. Desde que tengo memoria, los mundos en donde la animación cuenta historias de misterio y secretos ocultos han sido mi mayor obsesión. Mi objetivo es dar vida a proyectos con una identidad visual y un estilo indie, donde las tramas profundas se encuentren. Actualmente me encuentro sumergido en el desarrollo de mi proyecto más ambicioso: Inestable Sector 8, una serie donde la aventura urbana se cruza con un parque abandonado que esconde mucho más de lo que aparenta. Yo creo que la animación no tiene límites y que las mejores historias son aquellas que te mantienen al borde del asiento buscando respuestas. La animación indie ha comenzado a hacerse muy presente frente a estudios grandes de animación; Inestable Sector 8 también busca un lugar, incluso sin ningún peso en el bolsillo. Mi proceso ha sido bastante complicado desde que inicié en este mundo; ha sido un reto trabajar sin nada de financiamiento, pero mi ambición por tener mi propia serie es más fuerte que el problema del dinero, porque siempre existen personas que estarán dispuestas a ayudar y darlo todo para dar vida a una historia. No ha sido fácil llegar hasta este punto; aunque no tenga la serie terminada, tener a un grupo de artistas talentosos en mis manos es una mezcla de sentimientos muy intensa y tener la motivación de seguir todos los días es muy complicado, pero la fuerza de buscar conectar con una audiencia que ame explorar lo desconocido y los giros inesperados es el reflejo de ese esfuerzo. Soy un apasionado de la animación 2D. ¡Bienvenido a mi mundo!
+                    </p>
+                    <button class="btn-action" onclick="document.getElementById('nav-home').click()" style="max-width: 220px;">VOLVER</button>
+                    <div style="height: 40px;"></div>
+                `;
+                sectionView.scrollTop = 0;
+            }
+        });
+
+        function createLeaves() {
+            const container = document.querySelector('.container');
+            const leafCount = 50; 
+
+            for (let i = 0; i < leafCount; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                
+                // Dimensiones asimétricas para forma de hoja
+                const width = Math.random() * 6 + 4 + 'px';
+                const height = (parseFloat(width) * 1.8) + 'px';
+                const duration = Math.random() * 10 + 8 + 's';
+                const delay = Math.random() * 20 + 's';
+                
+                leaf.style.width = width;
+                leaf.style.height = height;
+                leaf.style.left = Math.random() * 100 + 'vw';
+                leaf.style.animationDuration = duration;
+                leaf.style.animationDelay = '-' + delay;
+                
+                container.appendChild(leaf);
+            }
+        }
+
+        function createBackgroundIcons() {
+            const container = document.querySelector('.container');
+            const icons = ['warning', 'bolt', 'skull', 'visibility', 'sensors', 'terminal', 'science', 'security', 'emergency_home'];
+            const iconCount = 15;
+
+            for (let i = 0; i < iconCount; i++) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'material-symbols-outlined bg-icon';
+                iconSpan.innerText = icons[Math.floor(Math.random() * icons.length)];
+                
+                const size = Math.random() * 4 + 3 + 'rem';
+                const duration = Math.random() * 20 + 20 + 's';
+                
+                iconSpan.style.fontSize = size;
+                iconSpan.style.left = Math.random() * 90 + 'vw';
+                iconSpan.style.top = Math.random() * 90 + 'vh';
+                iconSpan.style.animationDuration = duration;
+                iconSpan.style.animationDelay = '-' + (Math.random() * 20) + 's';
+                
+                container.appendChild(iconSpan);
+            }
+        }
+
+        createLeaves();
+        createBackgroundIcons();
+    </script>
+</body>
+</html>
