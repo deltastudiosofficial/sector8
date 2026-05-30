@@ -404,11 +404,21 @@
         /* Media Queries para Responsividad */
         @media (max-width: 768px) {
             #main-nav ul { 
-                gap: 5px; 
-                justify-content: space-around; 
-                padding: 5px 0;
+                gap: 4px; 
+                justify-content: center; 
+                padding: 8px 2px;
             }
-            #main-nav a { font-size: 1.1rem; flex-direction: column; gap: 2px; text-align: center; }
+            #main-nav a { 
+                font-size: 0.65rem; 
+                flex-direction: row; 
+                gap: 3px; 
+                padding: 6px 4px;
+                border: 1px solid rgba(255, 140, 0, 0.4);
+                border-radius: 4px;
+                background: rgba(255, 140, 0, 0.05);
+                text-transform: uppercase;
+            }
+            #main-nav a .material-symbols-outlined { font-size: 1rem; }
             #content-container { padding: 0 15px; }
             h1 { font-size: 4rem; }
             p { font-size: 1.2rem; line-height: 1.1 !important; letter-spacing: -0.02em; }
