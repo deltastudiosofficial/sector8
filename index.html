@@ -210,6 +210,68 @@
             transform: translateY(-3px);
         }
 
+        /* Clases para Responsividad de Contenido */
+        .content-box {
+            background-color: rgba(255, 140, 0, 0.1);
+            border: 2px solid var(--primary);
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .media-element {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: 10px auto;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* Control de Audio Global */
+        .global-audio-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: none; /* Se muestra tras 'Entrar' */
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary);
+            padding: 8px;
+            border-radius: 30px;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .global-audio-player:hover {
+            padding-right: 15px;
+            box-shadow: 0 0 20px var(--primary);
+        }
+        .audio-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            padding: 0;
+        }
+        .volume-slider {
+            width: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .global-audio-player:hover .volume-slider {
+            width: 80px;
+            opacity: 1;
+        }
+
         .btn-creator {
             font-family: 'Caveat', cursive !important;
             background-color: var(--primary) !important;
@@ -423,10 +485,12 @@
             #main-nav a .material-symbols-outlined { font-size: 1.15rem; }
             #content-container { padding: 0 15px; }
             h1 { font-size: 4rem; }
-            p { font-size: 1.2rem; line-height: 1.1 !important; letter-spacing: -0.02em; }
+            p { font-size: 1.2rem !important; line-height: 1.3 !important; }
             .btn-action { max-width: 100%; }
             .trees-container { display: none; }
             .welcome-bubble { font-size: 1.4rem; width: 90%; }
+            .content-box { padding: 15px !important; }
+            .btn-action[style*="padding: 25px"] { padding: 15px !important; font-size: 1.4rem !important; }
         }
 
         @media (min-width: 1200px) {
@@ -505,6 +569,13 @@
             <button class="btn-enter">Entrar</button>
         </div>
 
+        <!-- Reproductor Global -->
+        <div id="global-player" class="global-audio-player">
+            <button class="audio-btn" id="audio-toggle-btn" title="Reproducir/Pausar"><span class="material-symbols-outlined">play_circle</span></button>
+            <input type="range" id="global-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.5">
+            <button class="audio-btn" id="mute-btn" title="Silenciar"><span class="material-symbols-outlined" id="mute-icon">volume_up</span></button>
+        </div>
+
         <!-- Pantalla de Secciones (Aparece tras el clic) -->
         <nav id="main-nav">
             <ul>
@@ -564,6 +635,9 @@
             // Mostramos el contenido de la sección (el footer está dentro)
             document.getElementById('section-view').style.display = 'block';
             
+            // Mostramos el control de audio
+            document.getElementById('global-player').style.display = 'flex';
+
             document.querySelector('.container').style.justifyContent = 'flex-start';
 
             // Crear y mostrar el globo de bienvenida
@@ -576,6 +650,34 @@
             setTimeout(() => bubble.remove(), 4500);
         });
 
+        // Lógica de Audio Global
+        const bgAudio = new Audio('musica.mpeg');
+        bgAudio.loop = true;
+        const audioToggleBtn = document.getElementById('audio-toggle-btn');
+        const volumeSlider = document.getElementById('global-volume');
+        const muteBtn = document.getElementById('mute-btn');
+        const muteIcon = document.getElementById('mute-icon');
+
+        audioToggleBtn.addEventListener('click', () => {
+            if (bgAudio.paused) {
+                bgAudio.play();
+                audioToggleBtn.innerHTML = '<span class="material-symbols-outlined">pause_circle</span>';
+            } else {
+                bgAudio.pause();
+                audioToggleBtn.innerHTML = '<span class="material-symbols-outlined">play_circle</span>';
+            }
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            bgAudio.volume = e.target.value;
+            muteIcon.innerText = bgAudio.volume === 0 ? 'volume_off' : 'volume_up';
+        });
+
+        muteBtn.addEventListener('click', () => {
+            bgAudio.muted = !bgAudio.muted;
+            muteIcon.innerText = bgAudio.muted ? 'volume_off' : 'volume_up';
+        });
+
         // Lógica de navegación entre secciones
         const contentContainer = document.getElementById('content-container');
         const sectionView = document.getElementById('section-view');
@@ -584,9 +686,12 @@
             e.preventDefault();
             contentContainer.innerHTML = `
                 <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">ANIMACIÓN</p>
-                <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.8; font-size: 1.8rem; margin-bottom: 40px; text-align: justify;">Deja que tus ojos descubran el arte de dar alma a las sombras, el trazo desafía a la realidad y la imaginación se vuelve movimiento.</p>
-                <div style="background-color: rgba(255, 140, 0, 0.1); border: 2px solid #FF8C00; padding: 20px; margin-top: 20px; border-radius: 15px; width: 100%; box-sizing: border-box; text-align: center;">
-                    <p style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 1.8rem; margin: 0; text-align: center;">Aún no hay animaciones disponibles.</p>
+                <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.6; font-size: 1.8rem; margin-bottom: 30px; text-align: justify;">Deja que tus ojos descubran el arte de dar alma a las sombras, el trazo desafía a la realidad y la imaginación se vuelve movimiento.</p>
+                <div class="content-box" style="padding: 10px;">
+                    <video src="storyboard.mp4" controls class="media-element"></video>
+                    <p style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">clip storyboard del primer capitulo</p>
+                    <img src="nose.gif" alt="Imagen relacionada con animación" class="media-element">
+                    <p style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 1.6rem; margin-top: 10px; text-align: center;">storyboard del primer capitulo</p>
                 </div>
                 <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.6rem; margin-top: 20px; text-align: center;">Nuestro equipo trabaja día a día para traer a la pantalla una historia de calidad.</p>
                 <div style="height: 40px;"></div>
@@ -647,6 +752,13 @@
                         <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">MR.WAFFLES</h3>
                         <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">i like panqueques</p>
                     </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; max-width: 250px;">
+                        <div class="collab-avatar">
+                            <img src="josue.jpeg" alt="JOSUE" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h3 style="color: var(--primary); font-family: 'Permanent Marker', cursive; font-size: 2rem; margin: 0; text-transform: uppercase; text-align: center;">JOSUE</h3>
+                        <p style="color: #fff; font-family: 'VT323', monospace; font-size: 1.5rem; text-align: center; margin: 5px 0 0 0; line-height: 1.2;">editor</p>
+                    </div>
                 </div>
                 <div style="height: 40px;"></div>
             `;
@@ -697,6 +809,21 @@
                         ¡Hola! Soy Diego González, el creador y director de DELTA STUDIOS, un estudio mexicano de animación independiente nacido de la necesidad de contar historias que desafíen lo común. Desde que tengo memoria, los mundos en donde la animación cuenta historias de misterio y secretos ocultos han sido mi mayor obsesión. Mi objetivo es dar vida a proyectos con una identidad visual y un estilo indie, donde las tramas profundas se encuentren. Actualmente me encuentro sumergido en el desarrollo de mi proyecto más ambicioso: Inestable Sector 8, una serie donde la aventura urbana se cruza con un parque abandonado que esconde mucho más de lo que aparenta. Yo creo que la animación no tiene límites y que las mejores historias son aquellas que te mantienen al borde del asiento buscando respuestas. La animación indie ha comenzado a hacerse muy presente frente a estudios grandes de animación; Inestable Sector 8 también busca un lugar, incluso sin ningún peso en el bolsillo. Mi proceso ha sido bastante complicado desde que inicié en este mundo; ha sido un reto trabajar sin nada de financiamiento, pero mi ambición por tener mi propia serie es más fuerte que el problema del dinero, porque siempre existen personas que estarán dispuestas a ayudar y darlo todo para dar vida a una historia. No ha sido fácil llegar hasta este punto; aunque no tenga la serie terminada, tener a un grupo de artistas talentosos en mis manos es una mezcla de sentimientos muy intensa y tener la motivación de seguir todos los días es muy complicado, pero la fuerza de buscar conectar con una audiencia que ame explorar lo desconocido y los giros inesperados es el reflejo de ese esfuerzo. Soy un apasionado de la animación 2D. ¡Bienvenido a mi mundo!
                     </p>
                     <button class="btn-action" onclick="document.getElementById('nav-home').click()" style="max-width: 220px;">VOLVER</button>
+                    <div style="height: 40px;"></div>
+                `;
+                sectionView.scrollTop = 0;
+            } else if (e.target && e.target.classList.contains('btn-action') && e.target.textContent === 'EQUIPAMIENTO TÉCNICO') {
+                contentContainer.innerHTML = `
+                    <p style="color: #FF8C00; font-family: 'Permanent Marker', cursive; font-size: 2.5rem; margin-bottom: 20px;">EQUIPAMIENTO TÉCNICO</p>
+                    <p style="color: #fff; font-family: 'VT323', monospace; line-height: 1.6; font-size: 1.8rem; margin-bottom: 40px; text-align: center;">
+                        explora la atmósfera y equipamiento
+                    </p>
+                    <div class="content-box" style="box-shadow: 0 0 30px var(--primary-glow); margin-bottom: 30px;">
+                        <span class="material-symbols-outlined" style="font-size: 5rem; color: #FF8C00; margin-bottom: 15px; display: block; animation: pulseGlow 2s infinite alternate;">graphic_eq</span>
+                        <audio src="musica.mpeg" controls style="width: 100%; border-radius: 50px;"></audio>
+                        <p style="color: #FF8C00; font-family: 'VT323', monospace; font-size: 1.4rem; margin-top: 20px;">DEMO DE AMBIENTACIÓN - SECTOR 8</p>
+                    </div>
+                    <button class="btn-action" onclick="document.getElementById('nav-doblaje').click()" style="max-width: 220px;">VOLVER</button>
                     <div style="height: 40px;"></div>
                 `;
                 sectionView.scrollTop = 0;
